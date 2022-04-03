@@ -95,7 +95,6 @@ public class KalahaStateImpl implements KalahaState {
         }
 
         // should player change?
-        printList();
         return true;
     }
 
@@ -110,20 +109,6 @@ public class KalahaStateImpl implements KalahaState {
 
     private int countOppositeIndex(int index) {
         return 2 * houses - index;
-   }
-
-   // todo: remove
-   private void printList() {
-       System.out.println("------");
-       System.out.println(this.getPitsState());
-       System.out.println("\\/\\/\\/\\/\\/\\/\\/\\/\\/");
-
-
-       List player1list = this.getPitsState().subList(0, this.getPitsState().size() / 2);
-       Collections.reverse(player1list);
-       System.out.println(player1list);
-       System.out.println("   " + this.getPitsState().subList(this.getPitsState().size()/2, this.getPitsState().size()));
-       System.out.println("------");
    }
 
 }

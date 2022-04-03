@@ -5,8 +5,6 @@ import spock.lang.Specification
 
 class KalahaStateImplTest extends Specification {
 
-
-    @Ignore
     def "should intit properly"() {
 
         given:
@@ -24,7 +22,6 @@ class KalahaStateImplTest extends Specification {
 
     }
 
-    @Ignore
     def "should make single move"() {
         given:
         def seeds = 4
@@ -59,7 +56,6 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(3, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(2, 1)
-        // // skonczyl na swoim base
         underTest.makeMove(0, 1)
         underTest.makeMove(12, 2)
 
@@ -83,10 +79,13 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
-        underTest.makeMove(7, 2)
-
+        underTest.makeMove(5, 1)
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 4, 4, 4, 0, 1,
+                5, 5, 5, 4, 4, 4, 0
+        ]
     }
 
     def "game1 move by move #2"() {
@@ -95,11 +94,14 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
-        underTest.makeMove(4, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 4, 4, 4, 0, 1,
+                0, 6, 6, 5, 5, 5, 0
+        ]
     }
 
     def "game1 move by move #3"() {
@@ -108,13 +110,15 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
-        underTest.makeMove(7, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
-
+        state == [
+                4, 4, 4, 4, 0, 1, 2,
+                1, 7, 6, 5, 5, 5, 0
+        ]
     }
 
     def "game1 move by move #4"() {
@@ -123,13 +127,16 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
-        underTest.makeMove(3, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 4, 4, 0, 1, 2,
+                0, 8, 6, 5, 5, 5, 0
+        ]
 
     }
 
@@ -139,14 +146,18 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(3, 1)
-        underTest.makeMove(7, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 4, 0, 1, 2, 3,
+                1, 8, 6, 5, 5, 5, 0
+        ]
+
     }
 
     def "game1 move by move #6"() {
@@ -155,15 +166,18 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(3, 1)
         underTest.makeMove(7, 2)
-        underTest.makeMove(2, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 4, 0, 1, 2, 3,
+                0, 9, 6, 5, 5, 5, 0
+        ]
     }
 
     def "game1 move by move #7"() {
@@ -172,16 +186,19 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(3, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(2, 1)
-        underTest.makeMove(0, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                4, 4, 0, 1, 2, 3, 4,
+                0, 9, 6, 5, 5, 5, 0
+        ]
     }
 
     def "game1 move by move #8"() {
@@ -190,6 +207,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -197,10 +215,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(7, 2)
         underTest.makeMove(2, 1)
         underTest.makeMove(0, 1)
-        underTest.makeMove(12, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 5, 1, 2, 3, 3, 4,
+                0, 9, 6, 5, 5, 5, 0
+        ]
     }
 
     def "game1 move by move #9"() {
@@ -209,6 +229,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -217,10 +238,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(2, 1)
         underTest.makeMove(0, 1)
         underTest.makeMove(12, 2)
-        underTest.makeMove(1, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 6, 2, 3, 3, 3, 4,
+                0, 9, 6, 5, 5, 0, 1
+        ]
     }
 
     def "game1 move by move #10"() {
@@ -229,6 +252,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -238,10 +262,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(0, 1)
         underTest.makeMove(12, 2)
         underTest.makeMove(1, 1)
-        underTest.makeMove(7, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 0, 3, 4, 4, 4, 5,
+                1, 9, 6, 5, 5, 0, 1
+        ]
     }
 
     def "game1 move by move #11"() {
@@ -250,6 +276,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -260,10 +287,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(12, 2)
         underTest.makeMove(1, 1)
         underTest.makeMove(7, 2)
-        underTest.makeMove(5, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 0, 3, 4, 4, 4, 5,
+                0, 10, 6, 5, 5, 0, 1
+        ]
     }
 
     def "game1 move by move #12"() {
@@ -272,6 +301,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -283,10 +313,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(1, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(5, 1)
-        underTest.makeMove(7, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 0, 3, 4, 4, 0, 6,
+                1, 11, 7, 5, 5, 0, 1
+        ]
     }
 
     def "game1 move by move #13"() {
@@ -295,6 +327,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -307,10 +340,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(7, 2)
         underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
-        underTest.makeMove(0, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 0, 3, 4, 4, 0, 6,
+                0, 12, 7, 5, 5, 0, 1
+        ]
     }
 
     def "game1 move by move #14"() {
@@ -319,6 +354,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -332,10 +368,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(0, 1)
-        underTest.makeMove(8, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 0, 3, 4, 4, 0, 12,
+                0, 12, 7, 5, 0, 0, 1
+        ]
     }
 
     def "game1 move by move #15"() {
@@ -344,6 +382,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -358,10 +397,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(7, 2)
         underTest.makeMove(0, 1)
         underTest.makeMove(8, 2)
-        underTest.makeMove(0, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 1, 4, 5, 5, 0, 12,
+                0, 0, 8, 6, 1, 1, 4
+        ]
     }
 
     def "game1 move by move #16"() {
@@ -370,6 +411,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -385,10 +427,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(0, 1)
         underTest.makeMove(8, 2)
         underTest.makeMove(0, 1)
-        underTest.makeMove(12, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 2, 4, 5, 5, 0, 12,
+                0, 0, 8, 6, 1, 1, 4
+        ]
     }
 
     def "game1 move by move #17"() {
@@ -397,6 +441,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -413,10 +458,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(8, 2)
         underTest.makeMove(0, 1)
         underTest.makeMove(12, 2)
-        underTest.makeMove(9, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 2, 4, 5, 5, 0, 12,
+                0, 0, 8, 6, 1, 0, 5
+        ]
     }
 
     def "game1 move by move #18"() {
@@ -425,6 +472,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -442,10 +490,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(0, 1)
         underTest.makeMove(12, 2)
         underTest.makeMove(9, 2)
-        underTest.makeMove(2, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 3, 5, 6, 5, 0, 12,
+                0, 0, 0, 7, 2, 1, 6
+        ]
     }
 
     def "game1 move by move #19"() {
@@ -454,6 +504,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -472,10 +523,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(12, 2)
         underTest.makeMove(9, 2)
         underTest.makeMove(2, 1)
-        underTest.makeMove(10, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 3, 0, 7, 6, 1, 13,
+                1, 0, 0, 7, 2, 1, 6
+        ]
     }
 
     def "game1 move by move #20"() {
@@ -484,6 +537,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -503,10 +557,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(9, 2)
         underTest.makeMove(2, 1)
         underTest.makeMove(10, 2)
-        underTest.makeMove(3, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                2, 4, 1, 8, 6, 1, 13,
+                1, 0, 0, 0, 3, 2, 7
+        ]
     }
 
     def "game1 move by move #21"() {
@@ -515,6 +571,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -535,10 +592,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(2, 1)
         underTest.makeMove(10, 2)
         underTest.makeMove(3, 1)
-        underTest.makeMove(9, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                2, 4, 1, 0, 7, 2, 14,
+                2, 1, 1, 1, 4, 2, 7
+        ]
     }
 
     def "game1 move by move #22"() {
@@ -547,6 +606,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -568,10 +628,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(10, 2)
         underTest.makeMove(3, 1)
         underTest.makeMove(9, 2)
-        underTest.makeMove(0, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                2, 4, 1, 0, 7, 2, 14,
+                2, 1, 0, 2, 4, 2, 7
+        ]
     }
 
     def "game1 move by move #23"() {
@@ -580,6 +642,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -602,10 +665,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(3, 1)
         underTest.makeMove(9, 2)
         underTest.makeMove(0, 1)
-        underTest.makeMove(8, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 5, 2, 0, 7, 2, 14,
+                2, 1, 0, 2, 4, 2, 7
+        ]
     }
 
     def "game1 move by move #24"() {
@@ -614,6 +679,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -637,10 +703,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(9, 2)
         underTest.makeMove(0, 1)
         underTest.makeMove(8, 2)
-        underTest.makeMove(4, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 5, 2, 0, 7, 2, 14,
+                2, 0, 1, 2, 4, 2, 7
+        ]
     }
 
     def "game1 move by move #25"() {
@@ -649,6 +717,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -673,10 +742,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(0, 1)
         underTest.makeMove(8, 2)
         underTest.makeMove(4, 1)
-        underTest.makeMove(9, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 5, 2, 0, 0, 3, 15,
+                3, 1, 2, 3, 5, 2, 7
+        ]
     }
 
     def "game1 move by move #26"() {
@@ -685,6 +756,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -710,10 +782,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(8, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(9, 2)
-        underTest.makeMove(1, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 5, 2, 0, 0, 3, 15,
+                3, 1, 0, 4, 6, 2, 7
+        ]
     }
 
     def "game1 move by move #27"() {
@@ -722,6 +796,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -748,10 +823,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(4, 1)
         underTest.makeMove(9, 2)
         underTest.makeMove(1, 1)
-        underTest.makeMove(5, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 0, 3, 1, 1, 4, 16,
+                3, 1, 0, 4, 6, 2, 7
+        ]
     }
 
     def "game1 move by move #28"() {
@@ -760,6 +837,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -787,10 +865,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(9, 2)
         underTest.makeMove(1, 1)
         underTest.makeMove(5, 1)
-        underTest.makeMove(11, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                0, 0, 3, 1, 1, 0, 17,
+                4, 2, 1, 4, 6, 2, 7
+        ]
     }
 
     def "game1 move by move #29"() {
@@ -799,6 +879,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -827,10 +908,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(1, 1)
         underTest.makeMove(5, 1)
         underTest.makeMove(11, 2)
-        underTest.makeMove(4, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 1, 4, 2, 1, 0, 17,
+                4, 2, 1, 4, 0, 3, 8
+        ]
     }
 
     def "game1 move by move #30"() {
@@ -839,6 +922,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -868,10 +952,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(5, 1)
         underTest.makeMove(11, 2)
         underTest.makeMove(4, 1)
-        underTest.makeMove(12, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                1, 1, 4, 2, 0, 0, 22,
+                0, 2, 1, 4, 0, 3, 8
+        ]
     }
 
     def "game1 move by move #31"() {
@@ -880,6 +966,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -910,10 +997,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(11, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(12, 2)
-        underTest.makeMove(3, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                2, 2, 4, 2, 0, 0, 22,
+                0, 2, 1, 4, 0, 0, 9
+        ]
     }
 
     def "game1 move by move #32"() {
@@ -922,6 +1011,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -953,10 +1043,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(4, 1)
         underTest.makeMove(12, 2)
         underTest.makeMove(3, 1)
-        underTest.makeMove(10, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                2, 2, 4, 0, 1, 1, 22,
+                0, 2, 1, 4, 0, 0, 9
+        ]
     }
 
     def "game1 move by move #33"() {
@@ -965,6 +1057,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -997,10 +1090,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(12, 2)
         underTest.makeMove(3, 1)
         underTest.makeMove(10, 2)
-        underTest.makeMove(5, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 2, 4, 0, 1, 1, 22,
+                0, 2, 1, 0, 1, 1, 10
+        ]
     }
 
     def "game1 move by move #34"() {
@@ -1009,6 +1104,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -1042,10 +1138,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(3, 1)
         underTest.makeMove(10, 2)
         underTest.makeMove(5, 1)
-        underTest.makeMove(4, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 2, 4, 0, 1, 0, 23,
+                0, 2, 1, 0, 1, 1, 10
+        ]
     }
 
     def "game1 move by move #35"() {
@@ -1054,6 +1152,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -1088,10 +1187,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(10, 2)
         underTest.makeMove(5, 1)
         underTest.makeMove(4, 1)
-        underTest.makeMove(12, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 2, 4, 0, 0, 1, 23,
+                0, 2, 1, 0, 1, 1, 10
+        ]
     }
 
     def "game1 move by move #36"() {
@@ -1100,6 +1201,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -1135,10 +1237,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(5, 1)
         underTest.makeMove(4, 1)
         underTest.makeMove(12, 2)
-        underTest.makeMove(8, 2)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 2, 4, 0, 0, 1, 23,
+                0, 2, 1, 0, 1, 0, 11
+        ]
     }
 
     def "game1 move by move #37"() {
@@ -1147,6 +1251,7 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -1183,10 +1288,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(4, 1)
         underTest.makeMove(12, 2)
         underTest.makeMove(8, 2)
-        underTest.makeMove(5, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 2, 0, 0, 0, 1, 23,
+                0, 0, 2, 0, 1, 0, 16
+        ]
     }
 
     def "game1 move by move #38"() {
@@ -1195,6 +1302,59 @@ class KalahaStateImplTest extends Specification {
         def houses = 6
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(2, 1)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(1, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(2, 1)
+        underTest.makeMove(10, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(1, 1)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(11, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(10, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(5, 1)
+        def state = underTest.getPitsState()
+        then:
+        state == [
+                3, 2, 0, 0, 0, 0, 24,
+                0, 0, 2, 0, 1, 0, 16
+        ]
+    }
+
+    def "game1 move by move #39"() {
+        given:
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.makeMove(5, 1)
         underTest.makeMove(7, 2)
         underTest.makeMove(4, 1)
         underTest.makeMove(7, 2)
@@ -1233,9 +1393,12 @@ class KalahaStateImplTest extends Specification {
         underTest.makeMove(8, 2)
         underTest.makeMove(5, 1)
         underTest.makeMove(1, 1)
-
+        def state = underTest.getPitsState()
         then:
-        true == true
+        state == [
+                3, 0, 1, 0, 0, 0, 27,
+                0, 0, 0, 0, 1, 0, 16
+        ]
     }
 
     def "full game 1"() {
@@ -1245,51 +1408,52 @@ class KalahaStateImplTest extends Specification {
         when:
         def underTest = new KalahaStateImpl(seeds, houses)
 
-        1 underTest.makeMove(7, 2)
-        2 underTest.makeMove(4, 1)
-        3 underTest.makeMove(7, 2)
-        4 underTest.makeMove(3, 1)
-        5 underTest.makeMove(7, 2)
-        6 underTest.makeMove(2, 1)
-        7 underTest.makeMove(0, 1)
-        8 underTest.makeMove(12, 2)
-        9 underTest.makeMove(1, 1)
-        10 underTest.makeMove(7, 2)
-        11 underTest.makeMove(5, 1)
-        12 underTest.makeMove(7, 2)
-        13 underTest.makeMove(0, 1)
-        14 underTest.makeMove(8, 2)
-        15 underTest.makeMove(0, 1)
-        16 underTest.makeMove(12, 2)
-        17 underTest.makeMove(9, 2)
-        18 underTest.makeMove(2, 1)
-        19 underTest.makeMove(10, 2)
-        20 underTest.makeMove(3, 1)
-        21 underTest.makeMove(9, 2)
-        22 underTest.makeMove(0, 1)
-        23 underTest.makeMove(8, 2)
-        24 underTest.makeMove(4, 1)
-        25 underTest.makeMove(9, 2)
-        26 underTest.makeMove(1, 1)
-        27 underTest.makeMove(5, 1)
-        28 underTest.makeMove(11, 2) 2
-        29 underTest.makeMove(4, 1)
-        30 underTest.makeMove(12, 2)
-        31 underTest.makeMove(3, 1)
-        32 underTest.makeMove(10, 2)
-        33 underTest.makeMove(5, 1)
-        34 underTest.makeMove(4, 1)
-        35 underTest.makeMove(12, 2)
-        36 underTest.makeMove(8, 2)
-        37 underTest.makeMove(5, 1)
-        38 underTest.makeMove(1, 1)
-        39 underTest.makeMove(11, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(2, 1)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(1, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(7, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(2, 1)
+        underTest.makeMove(10, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(0, 1)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(9, 2)
+        underTest.makeMove(1, 1)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(11, 2)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(3, 1)
+        underTest.makeMove(10, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(4, 1)
+        underTest.makeMove(12, 2)
+        underTest.makeMove(8, 2)
+        underTest.makeMove(5, 1)
+        underTest.makeMove(1, 1)
+        underTest.makeMove(11, 2)
 
         def state = underTest.getPitsState()
         then:
         state == [
-                1, 1, 4, 5, 5, 0, 12,
-                0, 0, 8, 6, 1, 1, 4
+                0, 0, 0, 0, 0, 0, 28,
+                0, 0, 0, 0, 0, 0, 20
         ]
     }
 

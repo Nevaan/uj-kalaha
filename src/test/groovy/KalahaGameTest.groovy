@@ -1,16 +1,12 @@
-import implementation.KalahaStateImpl
 import interfaces.GameStateObserver
 import interfaces.KalahPlayer
-import interfaces.KalahaState
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class KalahaGameTest extends Specification {
 
     def underTest = new KalahaGame()
 
-    @Ignore("Needs further implementation - full game")
-    def "test game"() {
+    def "test game1"() {
         given:
             def observer = Mock(GameStateObserver)
             def p1 = Mock(KalahPlayer)
@@ -22,24 +18,9 @@ class KalahaGameTest extends Specification {
             underTest.addObserver(observer)
             underTest.startGame()
         then:
-            1 * observer.currentState( { KalahaState it ->
-                it.pitsState == [
-                        4,4,4,4,4,4,0,
-                        4,4,4,4,4,4,0
-                ]
-            } )
+            p1.yourMove(_) >>> [5, 4, 3, 2, 0, 1, 5, 0, 0, 2, 3, 0, 4, 1, 5, 4, 3, 5, 4, 5, 1]
+            p2.yourMove(_) >>> [7, 7, 7, 12, 7, 7, 8, 12, 9, 10, 9, 8, 9, 11, 12, 10, 12, 8, 11]
 
-            1 * p1.yourMove([
-                    4,4,4,4,4,4,0,
-                    4,4,4,4,4,4,0
-            ]) >> 2
-
-            1 * observer.currentState( { KalahaState it ->
-                it.pitsState == [
-                        4,4,0,5,5,5,1,
-                        4,4,4,4,4,4,0
-                ]
-            } )
     }
 
 }

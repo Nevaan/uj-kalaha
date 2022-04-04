@@ -13,6 +13,6 @@ public class GameStateObserverImpl implements GameStateObserver {
 
     @Override
     public void currentState(KalahaState state) {
-        System.out.println("Observer " + id + " received state: " + state);
+        System.out.println("Observer " + id + " received state: " + state.getPitsState());
     }
 }

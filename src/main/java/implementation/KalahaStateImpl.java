@@ -58,6 +58,7 @@ public class KalahaStateImpl implements KalahaState {
     public boolean makeMove(int startIdx, int playerNo) {
         AbstractPit chosenPit = houseState.get(startIdx);
         int stonesInPit = chosenPit.getStoneAmount();
+        boolean shouldPlayerChange = true;
 
         chosenPit.clearAmount();
 
@@ -88,6 +89,11 @@ public class KalahaStateImpl implements KalahaState {
             elementsToIncrement.remove(elementsToIncrement.size() - 1);
         }
 
+        if (lastPit.getPlayerNo() == playerNo && lastPit instanceof KalahPit) {
+            shouldPlayerChange = false;
+        }
+
+
         if(takeLast) {
             int oppositeIndex = countOppositeIndex(lastIndex);
             AbstractPit oppositePit =  houseState.get(oppositeIndex);
@@ -103,7 +109,7 @@ public class KalahaStateImpl implements KalahaState {
 
         endGame();
 
-        return true;
+        return shouldPlayerChange;
     }
 
     private int player1Score() {
@@ -123,12 +129,16 @@ public class KalahaStateImpl implements KalahaState {
             int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
             player2State.forEach(AbstractPit::clearAmount);
             getPlayer2KalahPit().incrementBy(stonesLeft);
+            this.currentState = GameStates.END_OF_GAME;
+            this.result = GameResults.PLAYER2_WON;
             return;
         }
         if (p2Stones==0) {
             int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
             player1State.forEach(AbstractPit::clearAmount);
             getPlayer1KalahPit().incrementBy(stonesLeft);
+            this.currentState = GameStates.END_OF_GAME;
+            this.result = GameResults.PLAYER1_WON;
             return;
         }
 

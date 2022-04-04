@@ -74,14 +74,19 @@ public class KalahaStateImpl implements KalahaState {
 
         int lastIndex = elementsToIncrement.get(elementsToIncrement.size() - 1);
         AbstractPit lastPit = houseState.get(lastIndex);
+
+        List<Integer> incrementUnconditionally = elementsToIncrement.subList(0, elementsToIncrement.size() - 1);
+        incrementUnconditionally.forEach(idx -> houseState.get(idx).incrementBy(1));
+
         boolean takeLast = false;
-        if (lastPit.getPlayerNo() == playerNo && lastPit.getStoneAmount() == 0 && lastPit instanceof HousePit) {
+        if (lastPit.getPlayerNo() == playerNo &&
+                lastPit.getStoneAmount() == 0 &&
+                houseState.get(countOppositeIndex(lastIndex)).getStoneAmount() > 0 &&
+                lastPit instanceof HousePit) {
             takeLast = true;
 
             elementsToIncrement.remove(elementsToIncrement.size() - 1);
         }
-
-        elementsToIncrement.forEach(idx -> houseState.get(idx).incrementBy(1));
 
         if(takeLast) {
             int oppositeIndex = countOppositeIndex(lastIndex);
@@ -92,6 +97,8 @@ public class KalahaStateImpl implements KalahaState {
             int kalahaIdx = houses + ((playerNo - 1) * houses) + (playerNo - 1);
             AbstractPit kalahaPit = houseState.get(kalahaIdx);
             kalahaPit.incrementBy(stonesToTake);
+        } else {
+            lastPit.incrementBy(1);
         }
 
         // should player change?

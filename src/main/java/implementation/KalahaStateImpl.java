@@ -63,7 +63,7 @@ public class KalahaStateImpl implements KalahaState {
 
         List<Integer> elementsToIncrement = new ArrayList();
 
-        while(stonesInPit > 0) {
+        while (stonesInPit > 0) {
             chosenPit = chosenPit.getNextPit();
             int indexToIncrement = chosenPit.shouldIncrement(playerNo);
             if(indexToIncrement >= 0) {
@@ -101,18 +101,47 @@ public class KalahaStateImpl implements KalahaState {
             lastPit.incrementBy(1);
         }
 
-        // should player change?
+        endGame();
+
         return true;
     }
 
     private int player1Score() {
-        return houseState.get((this.houseState.size() / 2) - 1).getStoneAmount();
+        return getPlayer1KalahPit().getStoneAmount();
     }
 
     private int player2Score() {
-        return houseState.get(this.houseState.size() - 1).getStoneAmount();
+        return getPlayer2KalahPit().getStoneAmount();
     }
 
+    private void endGame() {
+        List<AbstractPit> player1State = houseState.stream().filter(x -> x.getIndex() < (this.houseState.size() / 2) - 1).collect(Collectors.toList());
+        List<AbstractPit> player2State = houseState.stream().skip(houses + 1).filter(x -> x.getIndex() < houseState.size() - 1).collect(Collectors.toList());
+        int p1Stones = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a + b);
+        int p2Stones = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a + b);
+        if (p1Stones == 0) {
+            int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
+            player2State.forEach(AbstractPit::clearAmount);
+            getPlayer2KalahPit().incrementBy(stonesLeft);
+            return;
+        }
+        if (p2Stones==0) {
+            int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
+            player1State.forEach(AbstractPit::clearAmount);
+            getPlayer1KalahPit().incrementBy(stonesLeft);
+            return;
+        }
+
+
+    }
+
+    private AbstractPit getPlayer1KalahPit() {
+        return houseState.get((this.houseState.size() / 2) - 1);
+    }
+
+    private AbstractPit getPlayer2KalahPit() {
+        return houseState.get(this.houseState.size() - 1);
+    }
 
     private int countOppositeIndex(int index) {
         return 2 * houses - index;

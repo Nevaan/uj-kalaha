@@ -50,7 +50,7 @@ public class KalahaGame implements interfaces.Kalah {
             KalahPlayer activePlayer = playerState.getPlayer(activePlayerNumber);
             int pitIndex = activePlayer.yourMove(currentState.getPitsState());
 
-            while(!playerState.isLegalMove(pitIndex, activePlayerNumber)) {
+            while(!playerState.isLegalMove(pitIndex)) {
                 pitIndex = activePlayer.yourMove(currentState.getPitsState());
             }
 

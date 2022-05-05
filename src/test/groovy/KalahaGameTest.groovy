@@ -19,7 +19,7 @@ class KalahaGameTest extends Specification {
             underTest.startGame()
         then:
             p1.yourMove(_) >>> [5, 4, 3, 2, 0, 1, 5, 0, 0, 2, 3, 0, 4, 1, 5, 4, 3, 5, 4, 5, 1]
-            p2.yourMove(_) >>> [7, 7, 7, 12, 7, 7, 8, 12, 9, 10, 9, 8, 9, 11, 12, 10, 12, 8, 11]
+            p2.yourMove(_) >>> [0, 0, 0, 5, 0, 0, 1, 5, 2, 3, 2, 1, 2, 4, 5, 3, 5, 1, 4]
 
     }
 

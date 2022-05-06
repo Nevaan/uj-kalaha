@@ -34,14 +34,6 @@ public abstract class AbstractPit {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public void setStoneAmount(int stoneAmount) {
-        this.stoneAmount = stoneAmount;
-    }
-
     public void incrementBy(int count) {
         this.stoneAmount += count;
     }

@@ -2,8 +2,8 @@ package implementation.pit;
 
 public class HousePit extends AbstractPit {
 
-    public HousePit(int idx, int stoneAmount,  int playerNo) {
-        super(idx, stoneAmount, playerNo);
+    public HousePit(int stoneAmount) {
+        super(stoneAmount);
     }
 
     @Override
@@ -11,9 +11,5 @@ public class HousePit extends AbstractPit {
         this.stoneAmount = 0;
     }
 
-    @Override
-    public int shouldIncrement(int playerTakingMove) {
-        return this.getIndex();
-    }
 
 }

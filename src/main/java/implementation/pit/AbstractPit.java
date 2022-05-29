@@ -3,15 +3,12 @@ package implementation.pit;
 
 public abstract class AbstractPit {
 
-    private int index;
     protected int stoneAmount;
     private AbstractPit nextPit;
-    private final int playerNo;
+    private AbstractPit oppositePit;
 
-    public AbstractPit(int index, int stoneAmount, int playerNo) {
-        this.index = index;
+    public AbstractPit(int stoneAmount) {
         this.stoneAmount = stoneAmount;
-        this.playerNo = playerNo;
     }
 
     public AbstractPit getNextPit() {
@@ -26,20 +23,17 @@ public abstract class AbstractPit {
         return stoneAmount;
     }
 
-    public int getPlayerNo() {
-        return playerNo;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
     public void incrementBy(int count) {
         this.stoneAmount += count;
     }
 
     public abstract void clearAmount();
 
-    public abstract int shouldIncrement(int playerTakingMove);
+    public AbstractPit getOppositePit() {
+        return oppositePit;
+    }
 
+    public void setOppositePit(AbstractPit oppositePit) {
+        this.oppositePit = oppositePit;
+    }
 }

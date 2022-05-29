@@ -1,5 +1,4 @@
 import implementation.KalahaStateImpl;
-import implementation.PlayerState;
 import interfaces.GameStateObserver;
 import interfaces.KalahPlayer;
 import interfaces.KalahaState;
@@ -9,7 +8,6 @@ import java.util.List;
 
 public class KalahaGame implements interfaces.Kalah {
 
-    private PlayerState playerState;
 
     private KalahaStateImpl currentState;
 
@@ -17,8 +15,11 @@ public class KalahaGame implements interfaces.Kalah {
 
     private List<GameStateObserver> observers = new ArrayList<>();
 
+    private KalahPlayer player1;
+    private KalahPlayer player2;
+
+
     public KalahaGame() {
-        playerState = new PlayerState();
     }
 
     @Override
@@ -29,7 +30,11 @@ public class KalahaGame implements interfaces.Kalah {
 
     @Override
     public void registerPlayer(KalahPlayer player) {
-        playerState.addPlayer(player);
+        if (player1 == null) {
+            player1 = player;
+        } else {
+            player2 = player;
+        }
     }
 
     @Override
@@ -41,16 +46,15 @@ public class KalahaGame implements interfaces.Kalah {
     public void startGame() {
 
         currentState = new KalahaStateImpl(this.seeds, this.houses);
-        playerState.initLegalMoves(this.houses);
         notifyObservers(currentState);
 
         activePlayerNumber = 1;
 
         while (!KalahaState.GameStates.END_OF_GAME.equals(currentState.getGameState())) {
-            KalahPlayer activePlayer = playerState.getPlayer(activePlayerNumber);
+            KalahPlayer activePlayer = activePlayerNumber == 1 ? player1 : player2;
             int pitIndex = activePlayer.yourMove(currentState.getPitsState());
 
-            while(!playerState.isLegalMove(pitIndex)) {
+            while(pitIndex< 0 || pitIndex > this.houses) {
                 pitIndex = activePlayer.yourMove(currentState.getPitsState());
             }
 

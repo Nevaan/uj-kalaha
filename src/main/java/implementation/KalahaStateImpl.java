@@ -6,8 +6,10 @@ import implementation.pit.KalahPit;
 import interfaces.KalahaState;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KalahaStateImpl implements KalahaState {
 
@@ -16,32 +18,59 @@ public class KalahaStateImpl implements KalahaState {
     private GameStates currentState = GameStates.INITAL_STATE;
     private GameResults result = GameResults.UNKNOWN;
 
-    private List<AbstractPit> houseState = new ArrayList<>();
+    private List<AbstractPit> player1Pits;
+    private List<AbstractPit> player2Pits;
 
     public KalahaStateImpl(int seeds, int houses) {
 
         this.houses = houses;
-        for (int j = 0; j < 2; j++) {
-            for (int i = 0; i < houses; i++) {
-                houseState.add(new HousePit((j * houses) + i + j, seeds, j + 1));
-            }
-            // base
-            houseState.add(new KalahPit(((j + 1) * houses) + j, j + 1));
+
+        player1Pits = initPits(seeds, houses);
+        player2Pits = initPits(seeds, houses);
+
+
+        player1Pits.get(houses).setNextPit(player2Pits.get(0));
+        player2Pits.get(houses).setNextPit(player1Pits.get(0));
+
+        List<AbstractPit> player1Houses = player1Pits.subList(0, player1Pits.size() - 1);
+        List<AbstractPit> player2Houses = player2Pits.subList(0, player1Pits.size() - 1);
+
+        Collections.reverse(player2Houses);
+
+        for (int i = 0; i < player1Houses.size(); i++) {
+            AbstractPit player1House = player1Houses.get(i);
+            AbstractPit player2House = player2Houses.get(i);
+
+            player1House.setOppositePit(player2House);
+            player2House.setOppositePit(player1House);
         }
 
-        // build chain
 
-        for (int x = 0; x < houseState.size() - 1; x++) {
-            houseState.get(x).setNextPit(houseState.get(x + 1));
+        Collections.reverse(player2Houses);
+    }
+
+    private List<AbstractPit> initPits(int seeds, int houses) {
+        List<AbstractPit> pits = new ArrayList<>();
+        for (int x = 0; x < houses; x++) {
+            pits.add(new HousePit(seeds));
+        }
+        pits.add(new KalahPit());
+
+        for (int x = 0; x < pits.size() - 1; x++) {
+            pits.get(x).setNextPit(pits.get(x+1));
         }
 
-        houseState.get(houseState.size() - 1).setNextPit(houseState.get(0));
-
+        return pits;
     }
 
     @Override
     public List<Integer> getPitsState() {
-        return houseState.stream().map(AbstractPit::getStoneAmount).collect(Collectors.toList());
+        List<Integer> player1PitsState = player1Pits.stream().map(AbstractPit::getStoneAmount).collect(Collectors.toList());
+        List<Integer> player2PitsState = player2Pits.stream().map(AbstractPit::getStoneAmount).collect(Collectors.toList());
+
+        return Stream.of(player1PitsState, player2PitsState)
+                .flatMap(x -> x.stream())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -56,54 +85,50 @@ public class KalahaStateImpl implements KalahaState {
 
     public boolean makeMove(int startIdx, int playerNo) {
 
-        int mappedIndex = (houses * (playerNo - 1)) + startIdx +(playerNo - 1);
+        List<AbstractPit> activePlayerPits = playerNo == 1 ? player1Pits: player2Pits;
+        AbstractPit chosenPit = activePlayerPits.get(startIdx);
 
-        AbstractPit chosenPit = houseState.get(mappedIndex);
         int stonesInPit = chosenPit.getStoneAmount();
         boolean shouldPlayerChange = true;
 
         chosenPit.clearAmount();
 
-        List<Integer> elementsToIncrement = new ArrayList();
+        List<AbstractPit> elementsToIncrement = new ArrayList();
 
         while (stonesInPit > 0) {
             chosenPit = chosenPit.getNextPit();
-            int indexToIncrement = chosenPit.shouldIncrement(playerNo);
-            if (indexToIncrement >= 0) {
-                elementsToIncrement.add(indexToIncrement);
+            if (!(!activePlayerPits.contains(chosenPit) && chosenPit instanceof KalahPit)) {
+                elementsToIncrement.add(chosenPit);
                 stonesInPit -= 1;
             }
         }
 
-        int lastIndex = elementsToIncrement.get(elementsToIncrement.size() - 1);
-        AbstractPit lastPit = houseState.get(lastIndex);
+        AbstractPit lastPit = elementsToIncrement.get(elementsToIncrement.size() - 1);
 
-        List<Integer> incrementUnconditionally = elementsToIncrement.subList(0, elementsToIncrement.size() - 1);
-        incrementUnconditionally.forEach(idx -> houseState.get(idx).incrementBy(1));
+        List<AbstractPit> incrementUnconditionally = elementsToIncrement.subList(0, elementsToIncrement.size() - 1);
+        incrementUnconditionally.forEach(pit -> pit.incrementBy(1));
 
         boolean takeLast = false;
-        if (lastPit.getPlayerNo() == playerNo &&
+        if (activePlayerPits.contains(lastPit) &&
+                lastPit instanceof HousePit &&
                 lastPit.getStoneAmount() == 0 &&
-                houseState.get(countOppositeIndex(lastIndex)).getStoneAmount() > 0 &&
-                lastPit instanceof HousePit) {
+                lastPit.getOppositePit().getStoneAmount() > 0) {
             takeLast = true;
 
             elementsToIncrement.remove(elementsToIncrement.size() - 1);
         }
 
-        if (lastPit.getPlayerNo() == playerNo && lastPit instanceof KalahPit) {
+        if (activePlayerPits.contains(lastPit) && lastPit instanceof KalahPit) {
             shouldPlayerChange = false;
         }
 
 
         if (takeLast) {
-            int oppositeIndex = countOppositeIndex(lastIndex);
-            AbstractPit oppositePit = houseState.get(oppositeIndex);
+            AbstractPit oppositePit = lastPit.getOppositePit();
             int stonesToTake = oppositePit.getStoneAmount() + 1;
             lastPit.clearAmount();
             oppositePit.clearAmount();
-            int kalahaIdx = houses + ((playerNo - 1) * houses) + (playerNo - 1);
-            AbstractPit kalahaPit = houseState.get(kalahaIdx);
+            AbstractPit kalahaPit = activePlayerPits.get(activePlayerPits.size() - 1);
             kalahaPit.incrementBy(stonesToTake);
         } else {
             lastPit.incrementBy(1);
@@ -115,40 +140,37 @@ public class KalahaStateImpl implements KalahaState {
     }
 
     private void endGame() {
-        List<AbstractPit> player1State = houseState.stream().filter(x -> x.getIndex() < (this.houseState.size() / 2) - 1).collect(Collectors.toList());
-        List<AbstractPit> player2State = houseState.stream().skip(houses + 1).filter(x -> x.getIndex() < houseState.size() - 1).collect(Collectors.toList());
+        List<AbstractPit> player1State = player1Pits.subList(0, houses);
+        List<AbstractPit> player2State = player2Pits.subList(0, houses);
+
         int p1Stones = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
         int p2Stones = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
+
+        if(p1Stones == 0 && p2Stones == 0) {
+            this.currentState = GameStates.END_OF_GAME;
+            this.result = GameResults.DRAW;
+            return;
+        }
+
         if (p1Stones == 0) {
             int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
             player2State.forEach(AbstractPit::clearAmount);
-            getPlayer2KalahPit().incrementBy(stonesLeft);
+            player2Pits.get(houses).incrementBy(stonesLeft);
             this.currentState = GameStates.END_OF_GAME;
             this.result = GameResults.PLAYER2_WON;
             return;
         }
+
         if (p2Stones == 0) {
             int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
             player1State.forEach(AbstractPit::clearAmount);
-            getPlayer1KalahPit().incrementBy(stonesLeft);
+            player1Pits.get(houses).incrementBy(stonesLeft);
             this.currentState = GameStates.END_OF_GAME;
             this.result = GameResults.PLAYER1_WON;
             return;
         }
 
 
-    }
-
-    private AbstractPit getPlayer1KalahPit() {
-        return houseState.get((this.houseState.size() / 2) - 1);
-    }
-
-    private AbstractPit getPlayer2KalahPit() {
-        return houseState.get(this.houseState.size() - 1);
-    }
-
-    private int countOppositeIndex(int index) {
-        return 2 * houses - index;
     }
 
 }

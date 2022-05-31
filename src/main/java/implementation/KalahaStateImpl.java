@@ -134,19 +134,23 @@ public class KalahaStateImpl implements KalahaState {
             lastPit.incrementBy(1);
         }
 
-        endGame();
+        if (playerNo==1) {
+            this.currentState = GameStates.AFTER_PLAYER1_TURN;
+        } else {
+            this.currentState = GameStates.AFTER_PLAYER2_TURN;
+        }
 
         return shouldPlayerChange;
     }
 
-    private void endGame() {
+    public void checkIfGameIsDone() {
         List<AbstractPit> player1State = player1Pits.subList(0, houses);
         List<AbstractPit> player2State = player2Pits.subList(0, houses);
 
         int p1Stones = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
         int p2Stones = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
 
-        if(p1Stones == 0 && p2Stones == 0) {
+        if (p1Stones == 0 && p2Stones == 0) {
             this.currentState = GameStates.END_OF_GAME;
             this.result = GameResults.DRAW;
             return;

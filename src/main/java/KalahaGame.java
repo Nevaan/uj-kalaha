@@ -68,6 +68,7 @@ public class KalahaGame implements interfaces.Kalah {
             }
 
             notifyObservers(currentState);
+            currentState.checkIfGameIsDone();
         }
 
         notifyObservers(currentState);

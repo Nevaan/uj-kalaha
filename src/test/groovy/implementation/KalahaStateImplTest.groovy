@@ -1451,7 +1451,7 @@ class KalahaStateImplTest extends Specification {
         def state = underTest.getPitsState()
         then:
         state == [
-                0, 0, 0, 0, 0, 0, 28,
+                0, 0, 1, 0, 0, 0, 27,
                 0, 0, 0, 0, 0, 0, 20
         ]
     }

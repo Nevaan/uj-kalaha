@@ -1,5 +1,8 @@
 package implementation
 
+import implementation.pit.HousePit
+import implementation.pit.KalahPit
+import interfaces.KalahaState
 import spock.lang.Specification
 
 class KalahaStateImplTest extends Specification {
@@ -1456,4 +1459,327 @@ class KalahaStateImplTest extends Specification {
         ]
     }
 
+    def "checkIfGameIsDone test1"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 6
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 1
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER1_WON
+    }
+
+    def "checkIfGameIsDone test2"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 1
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 6
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER2_WON
+    }
+
+    def "checkIfGameIsDone test3"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 6
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 6
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.DRAW
+    }
+
+    def "checkIfGameIsDone test4"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 6
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 5
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(1),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.DRAW
+    }
+
+    def "checkIfGameIsDone test5"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 5
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 6
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(1),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.DRAW
+    }
+
+    def "checkIfGameIsDone test6"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 7
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 5
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(4),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER2_WON
+    }
+
+    def "checkIfGameIsDone test7"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 5
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 7
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(4),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER1_WON
+    }
+
+    def "checkIfGameIsDone test8"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 5
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 7
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(4),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER2_WON
+    }
+
+    def "checkIfGameIsDone test9"() {
+        given:
+        def p1Kalah = new KalahPit()
+        p1Kalah.stoneAmount = 7
+        def p2Kalah = new KalahPit()
+        p2Kalah.stoneAmount = 5
+        def p1State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(4),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p1Kalah
+        ]
+        def p2State = [
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                new HousePit(0),
+                p2Kalah
+        ]
+        def seeds = 4
+        def houses = 6
+        when:
+        def underTest = new KalahaStateImpl(seeds, houses)
+        underTest.player1Pits = p1State
+        underTest.player2Pits = p2State
+        underTest.checkIfGameIsDone()
+        then:
+        underTest.currentState == KalahaState.GameStates.END_OF_GAME
+        underTest.result == KalahaState.GameResults.PLAYER1_WON
+    }
 }

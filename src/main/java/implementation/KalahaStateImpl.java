@@ -150,30 +150,38 @@ public class KalahaStateImpl implements KalahaState {
         int p1Stones = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
         int p2Stones = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
 
-        if (p1Stones == 0 && p2Stones == 0) {
+        if (p1Stones == 0 || p2Stones == 0) {
             this.currentState = GameStates.END_OF_GAME;
-            this.result = GameResults.DRAW;
+
+            if (p1Stones == 0) {
+                int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
+                player2State.forEach(AbstractPit::clearAmount);
+                player2Pits.get(houses).incrementBy(stonesLeft);
+            }
+
+            if (p2Stones == 0) {
+                int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
+                player1State.forEach(AbstractPit::clearAmount);
+                player1Pits.get(houses).incrementBy(stonesLeft);
+            }
+
+            int player1Score = player1Pits.get(houses).getStoneAmount();
+            int player2Score = player2Pits.get(houses).getStoneAmount();
+
+            if (player1Score == player2Score) {
+                this.result = GameResults.DRAW;
+            }
+
+            if (player1Score > player2Score) {
+                this.result = GameResults.PLAYER1_WON;
+            }
+
+            if (player1Score < player2Score) {
+                this.result = GameResults.PLAYER2_WON;
+            }
+
             return;
         }
-
-        if (p1Stones == 0) {
-            int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
-            player2State.forEach(AbstractPit::clearAmount);
-            player2Pits.get(houses).incrementBy(stonesLeft);
-            this.currentState = GameStates.END_OF_GAME;
-            this.result = GameResults.PLAYER2_WON;
-            return;
-        }
-
-        if (p2Stones == 0) {
-            int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
-            player1State.forEach(AbstractPit::clearAmount);
-            player1Pits.get(houses).incrementBy(stonesLeft);
-            this.currentState = GameStates.END_OF_GAME;
-            this.result = GameResults.PLAYER1_WON;
-            return;
-        }
-
 
     }
 

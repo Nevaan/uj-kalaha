@@ -177,4 +177,13 @@ public class KalahaStateImpl implements KalahaState {
 
     }
 
+    // todo: remove
+    public List<AbstractPit> getPlayer1Pits() {
+        return player1Pits;
+    }
+
+    // todo: remove
+    public List<AbstractPit> getPlayer2Pits() {
+        return player2Pits;
+    }
 }

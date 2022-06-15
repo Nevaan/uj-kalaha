@@ -1,10 +1,13 @@
 import implementation.KalahaStateImpl;
+import implementation.pit.AbstractPit;
 import interfaces.GameStateObserver;
 import interfaces.KalahPlayer;
 import interfaces.KalahaState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KalahaGame implements interfaces.Kalah {
 
@@ -52,10 +55,16 @@ public class KalahaGame implements interfaces.Kalah {
 
         while (!KalahaState.GameStates.END_OF_GAME.equals(currentState.getGameState())) {
             KalahPlayer activePlayer = activePlayerNumber == 1 ? player1 : player2;
-            int pitIndex = activePlayer.yourMove(currentState.getPitsState());
 
-            while(pitIndex< 0 || pitIndex > this.houses) {
-                pitIndex = activePlayer.yourMove(currentState.getPitsState());
+            List<Integer> stateFromUserPerspective = (activePlayerNumber == 1 ?
+                    Stream.concat(currentState.getPlayer1Pits().stream(), currentState.getPlayer2Pits().stream()) :
+                    Stream.concat(currentState.getPlayer2Pits().stream(), currentState.getPlayer1Pits().stream()))
+                    .map(AbstractPit::getStoneAmount).collect(Collectors.toList());
+
+            int pitIndex = activePlayer.yourMove(stateFromUserPerspective);
+
+            while (pitIndex< 0 || pitIndex > this.houses) {
+                pitIndex = activePlayer.yourMove(stateFromUserPerspective);
             }
 
             boolean shouldPlayerChange = currentState.makeMove(pitIndex, activePlayerNumber);

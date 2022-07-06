@@ -3,6 +3,7 @@ package implementation;
 import implementation.pit.AbstractPit;
 import implementation.pit.HousePit;
 import implementation.pit.KalahPit;
+import implementation.player.PlayerBoard;
 import interfaces.KalahaState;
 
 import java.util.ArrayList;
@@ -13,27 +14,23 @@ import java.util.stream.Stream;
 
 public class KalahaStateImpl implements KalahaState {
 
-    private int houses;
-
     private GameStates currentState = GameStates.INITAL_STATE;
     private GameResults result = GameResults.UNKNOWN;
 
-    private List<AbstractPit> player1Pits;
-    private List<AbstractPit> player2Pits;
+    private PlayerBoard playerBoard1;
+    private PlayerBoard playerBoard2;
 
-    public KalahaStateImpl(int seeds, int houses) {
+    public KalahaStateImpl(PlayerBoard playerBoard1, PlayerBoard playerBoard2) {
 
-        this.houses = houses;
+        this.playerBoard1 = playerBoard1;
+        this.playerBoard2 = playerBoard2;
 
-        player1Pits = initPits(seeds, houses);
-        player2Pits = initPits(seeds, houses);
+        this.playerBoard1.setNextKalahaPit(playerBoard2.getFirstPit());
+        this.playerBoard2.setNextKalahaPit(playerBoard1.getFirstPit());
 
 
-        player1Pits.get(houses).setNextPit(player2Pits.get(0));
-        player2Pits.get(houses).setNextPit(player1Pits.get(0));
-
-        List<AbstractPit> player1Houses = player1Pits.subList(0, player1Pits.size() - 1);
-        List<AbstractPit> player2Houses = player2Pits.subList(0, player1Pits.size() - 1);
+        List<AbstractPit> player1Houses = this.playerBoard1.getPlayerPits();
+        List<AbstractPit> player2Houses = this.playerBoard2.getPlayerPits();
 
         Collections.reverse(player2Houses);
 
@@ -49,24 +46,12 @@ public class KalahaStateImpl implements KalahaState {
         Collections.reverse(player2Houses);
     }
 
-    private List<AbstractPit> initPits(int seeds, int houses) {
-        List<AbstractPit> pits = new ArrayList<>();
-        for (int x = 0; x < houses; x++) {
-            pits.add(new HousePit(seeds));
-        }
-        pits.add(new KalahPit());
 
-        for (int x = 0; x < pits.size() - 1; x++) {
-            pits.get(x).setNextPit(pits.get(x+1));
-        }
-
-        return pits;
-    }
 
     @Override
     public List<Integer> getPitsState() {
-        List<Integer> player1PitsState = player1Pits.stream().map(AbstractPit::getStoneAmount).collect(Collectors.toList());
-        List<Integer> player2PitsState = player2Pits.stream().map(AbstractPit::getStoneAmount).collect(Collectors.toList());
+        List<Integer> player1PitsState = playerBoard1.getPitState();
+        List<Integer> player2PitsState = playerBoard2.getPitState();
 
         return Stream.of(player1PitsState, player2PitsState)
                 .flatMap(x -> x.stream())
@@ -85,7 +70,7 @@ public class KalahaStateImpl implements KalahaState {
 
     public boolean makeMove(int startIdx, int playerNo) {
 
-        List<AbstractPit> activePlayerPits = playerNo == 1 ? player1Pits: player2Pits;
+        List<AbstractPit> activePlayerPits = playerNo == 1 ? playerBoard1.getAllPits(): playerBoard2.getAllPits();
         AbstractPit chosenPit = activePlayerPits.get(startIdx);
 
         int stonesInPit = chosenPit.getStoneAmount();
@@ -97,7 +82,7 @@ public class KalahaStateImpl implements KalahaState {
 
         while (stonesInPit > 0) {
             chosenPit = chosenPit.getNextPit();
-            if (!(!activePlayerPits.contains(chosenPit) && chosenPit instanceof KalahPit)) {
+            if (activePlayerPits.contains(chosenPit) || !(chosenPit instanceof KalahPit)) {
                 elementsToIncrement.add(chosenPit);
                 stonesInPit -= 1;
             }
@@ -122,7 +107,6 @@ public class KalahaStateImpl implements KalahaState {
             shouldPlayerChange = false;
         }
 
-
         if (takeLast) {
             AbstractPit oppositePit = lastPit.getOppositePit();
             int stonesToTake = oppositePit.getStoneAmount() + 1;
@@ -144,29 +128,24 @@ public class KalahaStateImpl implements KalahaState {
     }
 
     public void checkIfGameIsDone() {
-        List<AbstractPit> player1State = player1Pits.subList(0, houses);
-        List<AbstractPit> player2State = player2Pits.subList(0, houses);
-
-        int p1Stones = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
-        int p2Stones = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
+        int p1Stones = playerBoard1.getPitStonesAmount();
+        int p2Stones = playerBoard2.getPitStonesAmount();
 
         if (p1Stones == 0 || p2Stones == 0) {
             this.currentState = GameStates.END_OF_GAME;
 
             if (p1Stones == 0) {
-                int stonesLeft = player2State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
-                player2State.forEach(AbstractPit::clearAmount);
-                player2Pits.get(houses).incrementBy(stonesLeft);
+                playerBoard2.clearPits();
+                playerBoard2.getKalaha().incrementBy(p2Stones);
             }
 
             if (p2Stones == 0) {
-                int stonesLeft = player1State.stream().map(AbstractPit::getStoneAmount).reduce(0, (a, b) -> a + b);
-                player1State.forEach(AbstractPit::clearAmount);
-                player1Pits.get(houses).incrementBy(stonesLeft);
+                playerBoard1.clearPits();
+                playerBoard1.getKalaha().incrementBy(p1Stones);
             }
 
-            int player1Score = player1Pits.get(houses).getStoneAmount();
-            int player2Score = player2Pits.get(houses).getStoneAmount();
+            int player1Score = playerBoard1.getResult();
+            int player2Score = playerBoard2.getResult();
 
             if (player1Score == player2Score) {
                 this.result = GameResults.DRAW;
@@ -185,13 +164,4 @@ public class KalahaStateImpl implements KalahaState {
 
     }
 
-    // todo: remove
-    public List<AbstractPit> getPlayer1Pits() {
-        return player1Pits;
-    }
-
-    // todo: remove
-    public List<AbstractPit> getPlayer2Pits() {
-        return player2Pits;
-    }
 }

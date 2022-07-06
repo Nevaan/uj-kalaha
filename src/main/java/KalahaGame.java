@@ -1,5 +1,6 @@
 import implementation.KalahaStateImpl;
 import implementation.pit.AbstractPit;
+import implementation.player.PlayerBoard;
 import interfaces.GameStateObserver;
 import interfaces.KalahPlayer;
 import interfaces.KalahaState;
@@ -20,6 +21,8 @@ public class KalahaGame implements interfaces.Kalah {
 
     private KalahPlayer player1;
     private KalahPlayer player2;
+    private PlayerBoard playerBoard1;
+    private PlayerBoard playerBoard2;
 
 
     public KalahaGame() {
@@ -35,8 +38,10 @@ public class KalahaGame implements interfaces.Kalah {
     public void registerPlayer(KalahPlayer player) {
         if (player1 == null) {
             player1 = player;
+            playerBoard1 = new PlayerBoard(seeds, houses);
         } else {
             player2 = player;
+            playerBoard2 = new PlayerBoard(seeds, houses);
         }
     }
 
@@ -48,7 +53,8 @@ public class KalahaGame implements interfaces.Kalah {
     @Override
     public void startGame() {
 
-        currentState = new KalahaStateImpl(this.seeds, this.houses);
+        currentState = new KalahaStateImpl(playerBoard1, playerBoard2);
+
         notifyObservers(currentState);
 
         activePlayerNumber = 1;
@@ -57,8 +63,8 @@ public class KalahaGame implements interfaces.Kalah {
             KalahPlayer activePlayer = activePlayerNumber == 1 ? player1 : player2;
 
             List<Integer> stateFromUserPerspective = (activePlayerNumber == 1 ?
-                    Stream.concat(currentState.getPlayer1Pits().stream(), currentState.getPlayer2Pits().stream()) :
-                    Stream.concat(currentState.getPlayer2Pits().stream(), currentState.getPlayer1Pits().stream()))
+                    Stream.concat(playerBoard1.getAllPits().stream(), playerBoard2.getAllPits().stream()) :
+                    Stream.concat(playerBoard2.getAllPits().stream(), playerBoard1.getAllPits().stream()))
                     .map(AbstractPit::getStoneAmount).collect(Collectors.toList());
 
             int pitIndex = activePlayer.yourMove(stateFromUserPerspective);

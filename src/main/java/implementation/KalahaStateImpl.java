@@ -71,51 +71,17 @@ public class KalahaStateImpl implements KalahaState {
     public boolean makeMove(int startIdx, int playerNo) {
 
         List<AbstractPit> activePlayerPits = playerNo == 1 ? playerBoard1.getAllPits(): playerBoard2.getAllPits();
+
         AbstractPit chosenPit = activePlayerPits.get(startIdx);
-
         int stonesInPit = chosenPit.getStoneAmount();
-        boolean shouldPlayerChange = true;
-
         chosenPit.clearAmount();
 
-        List<AbstractPit> elementsToIncrement = new ArrayList();
 
-        while (stonesInPit > 0) {
-            chosenPit = chosenPit.getNextPit();
-            if (activePlayerPits.contains(chosenPit) || !(chosenPit instanceof KalahPit)) {
-                elementsToIncrement.add(chosenPit);
-                stonesInPit -= 1;
-            }
-        }
+        boolean shouldPlayerChange = chosenPit.getNextPit().handleIncrement(stonesInPit);
 
-        AbstractPit lastPit = elementsToIncrement.get(elementsToIncrement.size() - 1);
-
-        List<AbstractPit> incrementUnconditionally = elementsToIncrement.subList(0, elementsToIncrement.size() - 1);
-        incrementUnconditionally.forEach(pit -> pit.incrementBy(1));
-
-        boolean takeLast = false;
-        if (activePlayerPits.contains(lastPit) &&
-                lastPit instanceof HousePit &&
-                lastPit.getStoneAmount() == 0 &&
-                lastPit.getOppositePit().getStoneAmount() > 0) {
-            takeLast = true;
-
-            elementsToIncrement.remove(elementsToIncrement.size() - 1);
-        }
-
-        if (activePlayerPits.contains(lastPit) && lastPit instanceof KalahPit) {
-            shouldPlayerChange = false;
-        }
-
-        if (takeLast) {
-            AbstractPit oppositePit = lastPit.getOppositePit();
-            int stonesToTake = oppositePit.getStoneAmount() + 1;
-            lastPit.clearAmount();
-            oppositePit.clearAmount();
-            AbstractPit kalahaPit = activePlayerPits.get(activePlayerPits.size() - 1);
-            kalahaPit.incrementBy(stonesToTake);
-        } else {
-            lastPit.incrementBy(1);
+        if(shouldPlayerChange) {
+            playerBoard1.getAllPits().forEach(AbstractPit::toggleActive);
+            playerBoard2.getAllPits().forEach(AbstractPit::toggleActive);
         }
 
         if (playerNo==1) {

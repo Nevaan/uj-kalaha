@@ -38,10 +38,10 @@ public class KalahaGame implements interfaces.Kalah {
     public void registerPlayer(KalahPlayer player) {
         if (player1 == null) {
             player1 = player;
-            playerBoard1 = new PlayerBoard(seeds, houses);
+            playerBoard1 = new PlayerBoard(seeds, houses, true);
         } else {
             player2 = player;
-            playerBoard2 = new PlayerBoard(seeds, houses);
+            playerBoard2 = new PlayerBoard(seeds, houses, false);
         }
     }
 

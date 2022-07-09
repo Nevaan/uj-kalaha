@@ -6,17 +6,15 @@ public abstract class AbstractPit {
     protected int stoneAmount;
     private AbstractPit nextPit;
     private AbstractPit oppositePit;
+    protected boolean isActive;
 
-    public AbstractPit(int stoneAmount) {
+    public AbstractPit(int stoneAmount, boolean isActive) {
         this.stoneAmount = stoneAmount;
+        this.isActive = isActive;
     }
 
     public AbstractPit getNextPit() {
         return nextPit;
-    }
-
-    public void setNextPit(AbstractPit nextPit) {
-        this.nextPit = nextPit;
     }
 
     public int getStoneAmount() {
@@ -36,4 +34,33 @@ public abstract class AbstractPit {
     public void setOppositePit(AbstractPit oppositePit) {
         this.oppositePit = oppositePit;
     }
+
+    public void toggleActive() {
+        this.isActive = !this.isActive;
+    }
+
+    public void setNextPit(AbstractPit nextPit) {
+        this.nextPit = nextPit;
+    }
+
+
+    public boolean handleIncrement(int stones) {
+        int handleInternal = handleInternal(stones);
+        if(stones > 1) {
+            return this.nextPit.handleIncrement(handleInternal);
+        }
+
+        if (handleInternal == 0) {
+            return shouldChangePlayer();
+        } else {
+            return this.nextPit.handleIncrement(handleInternal);
+        }
+    }
+
+    protected abstract int handleInternal(int stones);
+
+    protected abstract void incrementKalaha(int stones);
+
+    protected abstract boolean shouldChangePlayer();
+
 }

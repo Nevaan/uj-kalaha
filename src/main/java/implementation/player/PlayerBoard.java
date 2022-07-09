@@ -14,16 +14,16 @@ public class PlayerBoard {
     private final List<AbstractPit> playerPits;
     private final AbstractPit kalaha;
 
-    public PlayerBoard(int seeds, int houses) {
-        this.kalaha = new KalahPit();
-        this.playerPits = initPits(seeds, houses);
+    public PlayerBoard(int seeds, int houses, boolean isActive) {
+        this.kalaha = new KalahPit(isActive);
+        this.playerPits = initPits(seeds, houses, isActive);
     }
 
 
-    private List<AbstractPit> initPits(int seeds, int houses) {
+    private List<AbstractPit> initPits(int seeds, int houses, boolean isActive) {
         List<AbstractPit> pits = new ArrayList<>();
         for (int x = 0; x < houses; x++) {
-            pits.add(new HousePit(seeds));
+            pits.add(new HousePit(seeds, isActive));
         }
 
         for (int x = 0; x < pits.size() - 1; x++) {

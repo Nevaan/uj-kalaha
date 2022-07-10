@@ -14,21 +14,42 @@ public class HousePit extends AbstractPit {
     @Override
     protected int handleInternal(int stones) {
 
-        if (stones > 1 || !isActive){
+        if (stones > 1) {
             this.incrementBy(1);
-        } else {
+            return stones - 1;
+        } else  if (stones == 1) {
+
             AbstractPit oppositePit = getOppositePit();
-            if(stoneAmount == 0 && oppositePit.getStoneAmount() > 0) {
-                int stonesToIncrement = oppositePit.getStoneAmount() + 1;
+            if (isActive && stoneAmount == 0 && oppositePit.getStoneAmount() > 0) {
+                int stonesToTake = oppositePit.getStoneAmount() + 1;
                 clearAmount();
                 oppositePit.clearAmount();
-                incrementKalaha(stonesToIncrement);
+                incrementKalaha(stonesToTake);
+                return 0;
             } else {
                 this.incrementBy(1);
+                return 0;
             }
+
+        } else {
+            return 0;
         }
 
-        return stones - 1;
+//        if (stones > 1 || !isActive){
+//            this.incrementBy(1);
+//        } else {
+//            AbstractPit oppositePit = getOppositePit();
+//            if(stoneAmount == 0 && oppositePit.getStoneAmount() > 0) {
+//                int stonesToIncrement = oppositePit.getStoneAmount() + 1;
+//                clearAmount();
+//                oppositePit.clearAmount();
+//                incrementKalaha(stonesToIncrement);
+//            } else {
+//                this.incrementBy(1);
+//            }
+//        }
+//
+//        return stones - 1;
     }
 
     @Override

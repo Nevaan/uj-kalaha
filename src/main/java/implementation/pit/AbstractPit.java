@@ -39,6 +39,10 @@ public abstract class AbstractPit {
         this.isActive = !this.isActive;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public void setNextPit(AbstractPit nextPit) {
         this.nextPit = nextPit;
     }
@@ -46,9 +50,6 @@ public abstract class AbstractPit {
 
     public boolean handleIncrement(int stones) {
         int handleInternal = handleInternal(stones);
-        if(stones > 1) {
-            return this.nextPit.handleIncrement(handleInternal);
-        }
 
         if (handleInternal == 0) {
             return shouldChangePlayer();

@@ -1,28 +1,25 @@
-import implementation.KalahaStateImpl;
-import implementation.pit.AbstractPit;
 import implementation.player.PlayerBoard;
+import implementation.player.PlayerDecorator;
+import implementation.state.ExtendedState;
+import implementation.state.InitState;
 import interfaces.GameStateObserver;
 import interfaces.KalahPlayer;
 import interfaces.KalahaState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class KalahaGame implements interfaces.Kalah {
 
 
-    private KalahaStateImpl currentState;
+    private ExtendedState currentState;
 
-    private int houses, seeds, activePlayerNumber;
+    private int houses, seeds;
 
     private List<GameStateObserver> observers = new ArrayList<>();
 
     private KalahPlayer player1;
     private KalahPlayer player2;
-    private PlayerBoard playerBoard1;
-    private PlayerBoard playerBoard2;
 
 
     public KalahaGame() {
@@ -38,10 +35,8 @@ public class KalahaGame implements interfaces.Kalah {
     public void registerPlayer(KalahPlayer player) {
         if (player1 == null) {
             player1 = player;
-            playerBoard1 = new PlayerBoard(seeds, houses, true);
         } else {
             player2 = player;
-            playerBoard2 = new PlayerBoard(seeds, houses, false);
         }
     }
 
@@ -53,37 +48,20 @@ public class KalahaGame implements interfaces.Kalah {
     @Override
     public void startGame() {
 
-        currentState = new KalahaStateImpl(playerBoard1, playerBoard2);
+        player1 = new PlayerDecorator(player1, 0, houses);
+        player2 = new PlayerDecorator(player2, houses + 1, houses);
+
+        currentState = new InitState(new PlayerBoard(seeds, houses), player1, player2);
 
         notifyObservers(currentState);
-
-        activePlayerNumber = 1;
+        currentState = currentState.process();
 
         while (!KalahaState.GameStates.END_OF_GAME.equals(currentState.getGameState())) {
-            KalahPlayer activePlayer = activePlayerNumber == 1 ? player1 : player2;
 
-            List<Integer> stateFromUserPerspective = (activePlayerNumber == 1 ?
-                    Stream.concat(playerBoard1.getAllPits().stream(), playerBoard2.getAllPits().stream()) :
-                    Stream.concat(playerBoard2.getAllPits().stream(), playerBoard1.getAllPits().stream()))
-                    .map(AbstractPit::getStoneAmount).collect(Collectors.toList());
-
-            int pitIndex = activePlayer.yourMove(stateFromUserPerspective);
-
-            while (pitIndex< 0 || pitIndex > this.houses) {
-                pitIndex = activePlayer.yourMove(stateFromUserPerspective);
-            }
-
-            boolean shouldPlayerChange = currentState.makeMove(pitIndex, activePlayerNumber);
-            if(shouldPlayerChange) {
-                if(activePlayerNumber==1) {
-                    activePlayerNumber = 2;
-                } else {
-                    activePlayerNumber = 1;
-                }
-            }
-
+            ExtendedState nextState = currentState.process();
             notifyObservers(currentState);
-            currentState.checkIfGameIsDone();
+
+            currentState = nextState;
         }
 
         notifyObservers(currentState);

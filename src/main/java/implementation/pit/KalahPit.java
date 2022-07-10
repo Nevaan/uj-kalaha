@@ -23,6 +23,7 @@ public class KalahPit extends AbstractPit {
 
     @Override
     protected void incrementKalaha(int stones) {
+
         if(isActive) {
             incrementBy(stones);
         } else {

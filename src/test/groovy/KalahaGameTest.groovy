@@ -334,8 +334,8 @@ class KalahaGameTest extends Specification {
         1 * observer.currentState({ KalahaState it ->
             it.getGameState() == KalahaState.GameStates.AFTER_PLAYER1_TURN &&
                     it.getPitsState() == [
-                    3, 0, 1, 0, 0, 0, 27,
-                    0, 0, 0, 0, 1, 0, 16
+                        3, 0, 1, 0, 0, 0, 27,
+                        0, 0, 0, 0, 1, 0, 16
             ] &&
                     it.getGameResult() == KalahaState.GameResults.UNKNOWN
         })

@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 public class PlayerBoard {
 
-
     private final List<AbstractPit> player1Pits;
     private final AbstractPit player1Kalaha;
     private final List<AbstractPit> player2Pits;
@@ -24,7 +23,6 @@ public class PlayerBoard {
         List<AbstractPit> player2Pits = new ArrayList<>();
 
         for (int x = 0; x < houses; x++) {
-
             AbstractPit player1Pit = new HousePit(seeds, true);
             AbstractPit player2Pit = new HousePit(seeds, false);
             player1Pit.setOppositePit(player2Pit);
@@ -57,58 +55,6 @@ public class PlayerBoard {
 
     }
 
-
-
-//    private List<AbstractPit> initPits(int seeds, int houses) {
-//        List<AbstractPit> player1Pits = new ArrayList<>();
-//        List<AbstractPit> player2Pits = new ArrayList<>();
-////        List<AbstractPit> boardPits = new ArrayList<>();
-//
-//        for (int x = 0; x < houses; x++) {
-//
-//            AbstractPit player1Pit = new HousePit(seeds, true);
-//            AbstractPit player2Pit = new HousePit(seeds, false);
-//            player1Pit.setOppositePit(player2Pit);
-//            player2Pit.setOppositePit(player1Pit);
-//
-//            player1Pits.add(player1Pit);
-//            player2Pits.add(player2Pit);
-//        }
-//
-//        Collections.reverse(player2Pits);
-//
-//        AbstractPit player1Kalaha = new KalahPit(true);
-//        AbstractPit player2Kalaha = new KalahPit(false);
-//
-////        player1Pits.add(player1Kalaha);
-////        player2Pits.add(player2Kalaha);
-//
-//        this.player1Pits = player1Pits;
-//        this.player1Kalaha = player1Kalaha;
-//        this.player2Pits = player2Pits;
-//        this.player2Kalaha = player2Kalaha;
-//
-//
-////        boardPits.addAll(player1Pits);
-////        boardPits.addAll(player2Pits);
-//
-//        for (int x = 0; x < houses; x++) {
-//            player1Pits.get(x).setNextPit(player1Pits.get(x+1));
-//            player2Pits.get(x).setNextPit(player2Pits.get(x+1));
-//        }
-//
-//        player1Pits.get(player1Pits.size() - 1).setNextPit(player1Kalaha);
-//        player1Kalaha.setNextPit(player2Pits.get(0));
-//
-//        player2Pits.get(player2Pits.size() - 1).setNextPit(player2Kalaha);
-//        player2Kalaha.setNextPit(player1Pits.get(0));
-//
-////        boardPits.get(boardPits.size() -1).setNextPit(boardPits.get(0));
-//
-////        return boardPits;
-//    }
-
-
     public List<AbstractPit> getAllPits() {
         List<AbstractPit> result = new ArrayList<>();
 
@@ -137,16 +83,8 @@ public class PlayerBoard {
         return player1Pits.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
     }
 
-    public int getPlayer1Result() {
-        return player1Kalaha.getStoneAmount();
-    }
-
     public int getPlayer2StonesLeft() {
         return player2Pits.stream().map(AbstractPit::getStoneAmount).reduce(0, (a,b) -> a+b);
-    }
-
-    public int getPlayer2Result() {
-        return player1Kalaha.getStoneAmount();
     }
 
     public void cleanUpBoard() {

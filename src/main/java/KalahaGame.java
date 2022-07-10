@@ -11,9 +11,6 @@ import java.util.List;
 
 public class KalahaGame implements interfaces.Kalah {
 
-
-    private ExtendedState currentState;
-
     private int houses, seeds;
 
     private List<GameStateObserver> observers = new ArrayList<>();
@@ -51,7 +48,7 @@ public class KalahaGame implements interfaces.Kalah {
         player1 = new PlayerDecorator(player1, 0, houses);
         player2 = new PlayerDecorator(player2, houses + 1, houses);
 
-        currentState = new InitState(new PlayerBoard(seeds, houses), player1, player2);
+        ExtendedState currentState = new InitState(new PlayerBoard(seeds, houses), player1, player2);
 
         notifyObservers(currentState);
         currentState = currentState.process();

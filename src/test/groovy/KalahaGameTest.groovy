@@ -347,6 +347,9 @@ class KalahaGameTest extends Specification {
             ] &&
                     it.getGameResult() == KalahaState.GameResults.UNKNOWN
         })
+        0 * observer.currentState({ KalahaState it ->
+            it.getGameState() == KalahaState.GameStates.AFTER_PLAYER1_TURN
+        })
         1 * observer.currentState({ KalahaState it ->
             it.getGameState() == KalahaState.GameStates.END_OF_GAME &&
                     it.getPitsState() == [

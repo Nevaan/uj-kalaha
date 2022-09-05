@@ -7,11 +7,6 @@ public class KalahPit extends AbstractPit {
     }
 
     @Override
-    public void clearAmount() {
-        // NOOP
-    }
-
-    @Override
     protected int handleInternal(int stones) {
         if (!isActive) {
             return stones;
@@ -21,6 +16,8 @@ public class KalahPit extends AbstractPit {
         }
     }
 
+
+    // PATTERN: lancuch zobowiazan (chain of responsibility)
     @Override
     protected void incrementKalaha(int stones) {
 

@@ -25,7 +25,10 @@ public abstract class AbstractPit {
         this.stoneAmount += count;
     }
 
-    public abstract void clearAmount();
+    // PATTERN: metoda zaczepowa (hook method)
+    public void clearAmount() {
+
+    }
 
     public AbstractPit getOppositePit() {
         return oppositePit;
@@ -48,6 +51,8 @@ public abstract class AbstractPit {
     }
 
 
+    // PATTERN: metoda szablonowa (template method)
+    // PATTERN: lancuch zobowiazan (chain of responsibility)
     public boolean handleIncrement(int stones) {
         int handleInternal = handleInternal(stones);
 

@@ -16,6 +16,7 @@ public class PlayerDecorator implements KalahPlayer {
         this.maximumIndex = maximumIndex;
     }
 
+    // PATTERN: dekorator
     @Override
     public int yourMove(List<Integer> pitsState) {
 

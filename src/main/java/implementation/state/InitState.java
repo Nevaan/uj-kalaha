@@ -1,7 +1,7 @@
 package implementation.state;
 
 import implementation.player.PlayerBoard;
-import implementation.player.PlayerDecorator;
+import interfaces.GameStateObserver;
 import interfaces.KalahPlayer;
 
 import java.util.List;
@@ -12,15 +12,16 @@ public class InitState extends ExtendedState {
     private final KalahPlayer opponent;
 
 
-    public InitState(PlayerBoard board, KalahPlayer activePlayer, KalahPlayer opponent) {
-        super(board);
+    public InitState(PlayerBoard board, KalahPlayer activePlayer, KalahPlayer opponent, List<GameStateObserver> observers) {
+        super(board, observers);
         this.activePlayer = activePlayer;
         this.opponent = opponent;
     }
 
     @Override
     public ExtendedState process() {
-        return new Player1MoveState(board, activePlayer, opponent);
+        this.notifyState();
+        return new Player1MoveState(board, activePlayer, opponent, this.observers);
     }
 
     @Override

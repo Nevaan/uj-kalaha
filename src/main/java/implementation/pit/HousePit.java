@@ -37,6 +37,8 @@ public class HousePit extends AbstractPit {
 
     }
 
+
+    // PATTERN: lancuch zobowiazan (chain of responsibility)
     @Override
     protected void incrementKalaha(int stones) {
         getNextPit().incrementKalaha(stones);

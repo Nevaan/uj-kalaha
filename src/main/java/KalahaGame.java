@@ -48,28 +48,17 @@ public class KalahaGame implements interfaces.Kalah {
         player1 = new PlayerDecorator(player1, 0, houses);
         player2 = new PlayerDecorator(player2, houses + 1, houses);
 
-        ExtendedState currentState = new InitState(new PlayerBoard(seeds, houses), player1, player2);
-
-        notifyObservers(currentState);
-        currentState = currentState.process();
+        // PATTERN: stan
+        ExtendedState currentState = new InitState(new PlayerBoard(seeds, houses), player1, player2, this.observers);
 
         while (!KalahaState.GameStates.END_OF_GAME.equals(currentState.getGameState())) {
-
-            ExtendedState nextState = currentState.process();
-            notifyObservers(currentState);
-
-            currentState = nextState;
+            currentState = currentState.process();
         }
 
-        notifyObservers(currentState);
+        currentState.process();
 
     }
 
-    private void notifyObservers(KalahaState state) {
-        for (GameStateObserver obs : observers) {
-            obs.currentState(state);
-        }
-    }
 
 
 }

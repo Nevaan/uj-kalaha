@@ -11,7 +11,8 @@ import java.util.List;
 
 public class KalahaGame implements interfaces.Kalah {
 
-    private int houses, seeds;
+    private int houses;
+    private int seeds;
 
     private List<GameStateObserver> observers = new ArrayList<>();
 
@@ -20,6 +21,7 @@ public class KalahaGame implements interfaces.Kalah {
 
 
     public KalahaGame() {
+        // default required constructor
     }
 
     @Override
@@ -58,7 +60,6 @@ public class KalahaGame implements interfaces.Kalah {
         currentState.process();
 
     }
-
 
 
 }

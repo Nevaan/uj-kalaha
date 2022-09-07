@@ -4,7 +4,6 @@ import implementation.player.PlayerBoard;
 import interfaces.GameStateObserver;
 import interfaces.KalahaState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ExtendedState implements KalahaState {
@@ -12,7 +11,7 @@ public abstract class ExtendedState implements KalahaState {
     protected final PlayerBoard board;
     protected final List<GameStateObserver> observers;
 
-    public ExtendedState(PlayerBoard board, List<GameStateObserver> observers) {
+    protected ExtendedState(PlayerBoard board, List<GameStateObserver> observers) {
         this.board = board;
         this.observers = observers;
     }

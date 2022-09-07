@@ -8,7 +8,7 @@ public abstract class AbstractPit {
     private AbstractPit oppositePit;
     protected boolean isActive;
 
-    public AbstractPit(int stoneAmount, boolean isActive) {
+    protected AbstractPit(int stoneAmount, boolean isActive) {
         this.stoneAmount = stoneAmount;
         this.isActive = isActive;
     }

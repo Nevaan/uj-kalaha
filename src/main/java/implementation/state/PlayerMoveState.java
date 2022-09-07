@@ -14,7 +14,7 @@ public abstract class PlayerMoveState extends ExtendedState {
     protected final KalahPlayer activePlayer;
     protected final KalahPlayer opponent;
 
-    public PlayerMoveState(PlayerBoard board, KalahPlayer activePlayer, KalahPlayer opponent, List<GameStateObserver> observers) {
+    protected PlayerMoveState(PlayerBoard board, KalahPlayer activePlayer, KalahPlayer opponent, List<GameStateObserver> observers) {
         super(board, observers);
         this.activePlayer = activePlayer;
         this.opponent = opponent;
@@ -37,9 +37,7 @@ public abstract class PlayerMoveState extends ExtendedState {
                 return new EndState(board, GameResults.PLAYER1_WON, this.observers);
             }
 
-            if(player1Result < player2Result) {
-                return new EndState(board, GameResults.PLAYER2_WON, this.observers);
-            }
+            return new EndState(board, GameResults.PLAYER2_WON, this.observers);
         }
 
         int startIdx = activePlayer.yourMove(getPlayerPerspectiveState());

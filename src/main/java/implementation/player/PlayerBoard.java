@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PlayerBoard {
 
@@ -19,8 +18,8 @@ public class PlayerBoard {
 
     public PlayerBoard(int seeds, int houses) {
 
-        List<AbstractPit> player1Pits = new ArrayList<>();
-        List<AbstractPit> player2Pits = new ArrayList<>();
+        this.player1Pits = new ArrayList<>();
+        this.player2Pits = new ArrayList<>();
 
         for (int x = 0; x < houses; x++) {
             AbstractPit player1Pit = new HousePit(seeds, true);
@@ -34,13 +33,8 @@ public class PlayerBoard {
 
         Collections.reverse(player2Pits);
 
-        AbstractPit player1Kalaha = new KalahPit(true);
-        AbstractPit player2Kalaha = new KalahPit(false);
-
-        this.player1Pits = player1Pits;
-        this.player1Kalaha = player1Kalaha;
-        this.player2Pits = player2Pits;
-        this.player2Kalaha = player2Kalaha;
+        this.player1Kalaha = new KalahPit(true);
+        this.player2Kalaha = new KalahPit(false);
 
         for (int x = 0; x < houses - 1; x++) {
             player1Pits.get(x).setNextPit(player1Pits.get(x+1));

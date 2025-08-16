@@ -14,8 +14,11 @@
 
     <name>kalaha-web</name>
 
-    <dependencies>
+    <properties>
+        <spring-boot.version>3.5.4</spring-boot.version>
+    </properties>
 
+    <dependencies>
         <dependency>
             <groupId>com.losek</groupId>
             <artifactId>kalaha-interface</artifactId>
@@ -26,6 +29,18 @@
             <groupId>com.losek</groupId>
             <artifactId>kalaha-core</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <!-- TEST -->

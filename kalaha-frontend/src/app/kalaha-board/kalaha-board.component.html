@@ -4,12 +4,20 @@
     <div class="store-container store-left">
       <kalaha-store [value]="player2Store"></kalaha-store>
     </div>
-    <kalaha-pit *ngFor="let pit of player2Pits" [value]="pit"></kalaha-pit>
+    <ng-container *ngFor="let pit of player2Pits; let i = index">
+      <div class="cell">
+        <kalaha-pit [value]="pit" (pitClick)="onPitClick(i + 6)"></kalaha-pit>
+      </div>
+    </ng-container>
   </div>
   <div class="pits-row">
-    <div class="store-container store-right">
-      <kalaha-store [value]="player1Store" position="left"></kalaha-store>
+    <div class="cell store-container store-right">
+      <kalaha-store [value]="player1Store"></kalaha-store>
     </div>
-    <kalaha-pit *ngFor="let pit of player1Pits" [value]="pit"></kalaha-pit>
+    <ng-container *ngFor="let pit of player1Pits; let i = index">
+      <div class="cell">
+        <kalaha-pit [value]="pit" (pitClick)="onPitClick(i)"></kalaha-pit>
+      </div>
+    </ng-container>
   </div>
 </div>

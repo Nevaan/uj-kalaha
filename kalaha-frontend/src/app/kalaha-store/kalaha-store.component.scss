@@ -1,0 +1,18 @@
+.store {
+  width: 60px;
+  height: 60px;
+  background: #e0e0e0;
+  border: 2px solid #888;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.store-left {
+  order: -1;
+}
+.store-right {
+  order: 1;
+}
+

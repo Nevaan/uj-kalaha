@@ -1,0 +1,47 @@
+// wyczyszczony plik stylów
+
+.kalaha-board {
+  background: #e2c48d;
+  border-radius: 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  margin: 40px auto;
+  padding: 32px 40px;
+  min-width: 500px;
+  width: fit-content;
+  min-height: 200px;
+}
+
+.pits-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  min-width: 500px;
+  gap: 24px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.store-container.store-left {
+  display: flex;
+  align-items: center;
+  order: -1;
+}
+
+.store-container.store-right {
+  display: flex;
+  align-items: center;
+  order: 1;
+  margin-left: auto;
+}

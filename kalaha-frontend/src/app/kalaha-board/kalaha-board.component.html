@@ -1,0 +1,15 @@
+<div class="kalaha-board">
+  <h2>Plansza Kalaha</h2>
+  <div class="pits-row">
+    <div class="store-container store-left">
+      <kalaha-store [value]="player2Store"></kalaha-store>
+    </div>
+    <kalaha-pit *ngFor="let pit of player2Pits" [value]="pit"></kalaha-pit>
+  </div>
+  <div class="pits-row">
+    <div class="store-container store-right">
+      <kalaha-store [value]="player1Store" position="left"></kalaha-store>
+    </div>
+    <kalaha-pit *ngFor="let pit of player1Pits" [value]="pit"></kalaha-pit>
+  </div>
+</div>
